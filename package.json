@@ -22,8 +22,8 @@
   },
   "scripts": {
     "prepare": "husky",
-    "test-stage": "ENV_TYPE=staging npx playwright test",
-    "test-stage-ui": "ENV_TYPE=staging npx playwright test -–ui"
+    "test-staging": "ENV_TYPE=staging npx playwright test",
+    "test-staging-ui": "ENV_TYPE=staging npx playwright test --ui"
   },
   "husky": {
     "hooks": {
