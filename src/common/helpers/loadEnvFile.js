@@ -13,6 +13,6 @@ export function loadEnvFile(envType) {
 
 export function throwMissinEnvTypeError() {
   throw new Error(
-    `The ENV_TYPE is undefined. Check the ENV_TYPE env variable is set.`,
+    'The ENV_TYPE is undefined. Check the ENV_TYPE env variable is set.',
   );
 }
