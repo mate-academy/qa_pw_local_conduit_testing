@@ -13,6 +13,10 @@ export async function signUpUser(page, user, userId = 0) {
       await signUpPage.submitSignUpForm(user);
 
       await homePage.yourFeed.assertTabLinkVisible();
+
+      if (process.env.ENV_TYPE === 'local') {
+        await page.getByRole('button', { name: 'OK' }).click();
+      }
     },
     userId,
   );
