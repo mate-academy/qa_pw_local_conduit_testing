@@ -2,6 +2,8 @@ import { expect } from '../../../common/helpers/pw';
 import { BasePage } from '../BasePage';
 import { ROUTES } from '../../constants/pageRoutes';
 
+const { ENV_TYPE } = process.env;
+
 export class SignUpPage extends BasePage {
   constructor(page, userId = 0) {
     super(page, userId);
@@ -10,7 +12,10 @@ export class SignUpPage extends BasePage {
     this.emailField = page.getByPlaceholder('Email');
     this.passwordField = page.getByPlaceholder('Password');
     this.signUpButton = page.getByRole('button', { name: 'Sign up' });
-    this.errorMessage = page.getByRole('list').nth(1);
+    this.errorMessage =
+      ENV_TYPE === 'local'
+        ? page.getByRole('dialog')
+        : page.getByRole('list').nth(1);
   }
 
   async fillUsernameField(username) {

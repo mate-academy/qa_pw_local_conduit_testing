@@ -7,7 +7,7 @@ export function generateNewUserData(logger = null) {
   const user = {
     username: `${firstName}_${lastName}`.replaceAll(`'`).toLowerCase(),
     email: `${firstName}_${faker.internet.email()}`.toLowerCase(),
-    password: faker.internet.password(),
+    password: 'Testpass123!',
   };
 
   if (logger) {
