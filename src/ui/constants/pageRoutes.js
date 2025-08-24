@@ -1,18 +1,6 @@
-const ENV_TYPE = process.env.ENV_TYPE || 'local';
-
-const routesByEnv = {
-  local: {
-    home: '/',
-    login: '#/login',
-    register: '#/register',
-    articleEditor: '#/editor',
-  },
-  staging: {
-    home: '/',
-    login: '/user/login',
-    register: '/user/register',
-    articleEditor: '/editor',
-  },
+export const ROUTES = {
+  register: process.env.ROUTE_REGISTER,
+  articleEditor: process.env.ROUTE_EDITOR,
+  login: process.env.ROUTE_LOGIN,
+  home: process.env.ROUTE_HOME,
 };
-
-export const ROUTES = routesByEnv[ENV_TYPE];
