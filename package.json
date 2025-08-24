@@ -12,6 +12,7 @@
     "@eslint/js": "^9.19.0",
     "@playwright/test": "^1",
     "allure-playwright": "^3.2.0",
+    "cross-env": "^10.0.0",
     "eslint": "^9.19.0",
     "eslint-config-prettier": "^10.0.1",
     "eslint-plugin-playwright": "^2.2.0",
@@ -22,8 +23,10 @@
   },
   "scripts": {
     "prepare": "husky",
-    "test-staging": "ENV_TYPE=staging npx playwright test",
-    "test-staging-ui": "ENV_TYPE=staging npx playwright test --ui"
+    "test:local": "cross-env ENV_TYPE=local npx playwright test",
+    "test:local-ui": "cross-env ENV_TYPE=local npx playwright test --ui",
+    "test:staging": "cross-env ENV_TYPE=staging npx playwright test",
+    "test:staging-ui": "cross-env ENV_TYPE=staging npx playwright test --ui"
   },
   "husky": {
     "hooks": {
