@@ -4,9 +4,8 @@ import {
   throwMissinEnvTypeError,
 } from './src/common/helpers/loadEnvFile';
 
-const envType = process.env.ENV_TYPE || throwMissinEnvTypeError();
-
-loadEnvFile(envType);
+const ENV_TYPE = process.env.ENV_TYPE || throwMissinEnvTypeError();
+loadEnvFile(ENV_TYPE);
 
 /**
  * See https://playwright.dev/docs/test-configuration.
