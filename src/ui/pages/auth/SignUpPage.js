@@ -5,6 +5,7 @@ import { ROUTES } from '../../constants/pageRoutes';
 export class SignUpPage extends BasePage {
   constructor(page, userId = 0) {
     super(page, userId);
+    console.log('ROUTES.register =', ROUTES.register);
     this._url = ROUTES.register;
     this.usernameField = page.getByPlaceholder('Username');
     this.emailField = page.getByPlaceholder('Email');
