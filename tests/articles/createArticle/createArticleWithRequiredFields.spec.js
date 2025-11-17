@@ -4,10 +4,10 @@ import { signUpUser } from '../../../src/ui/actions/auth/signUpUser';
 
 let article;
 
-test.beforeEach(async ({ page, user, logger }) => {
+test.beforeEach(async ({ page, user, internalHomePage, logger }) => {
   article = generateNewArticleData(logger);
-
   await signUpUser(page, user);
+  await internalHomePage.closeSwalIfVisible();
 });
 
 test('Creat an article with required fields', async ({

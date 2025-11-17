@@ -21,10 +21,12 @@
     "prettier": "^3.4.2"
   },
   "scripts": {
-    "prepare": "husky",
-    "test-staging": "ENV_TYPE=staging npx playwright test",
-    "test-staging-ui": "ENV_TYPE=staging npx playwright test --ui"
-  },
+      "test-local": "set ENV_TYPE=local&& npx playwright test",
+      "test-local-ui": "set ENV_TYPE=local&& npx playwright test --ui",
+      "test-staging": "set ENV_TYPE=staging&& npx playwright test",
+      "test-staging-ui": "set ENV_TYPE=staging&& npx playwright test --ui"
+    },
+    
   "husky": {
     "hooks": {
       "pre-commit": "lint-staged"

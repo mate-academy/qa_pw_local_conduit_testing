@@ -9,7 +9,7 @@ export class SignInPage extends BasePage {
     this.emailField = page.getByPlaceholder('Email');
     this.passwordField = page.getByPlaceholder('Password');
     this.signInButton = page.getByRole('button', { name: 'Sign in' });
-    this.errorMessage = page.getByRole('list').nth(1);
+    this.errorMessage = page.locator('.swal-text');
   }
 
   async fillEmailField(email) {
