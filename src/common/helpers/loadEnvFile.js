@@ -1,6 +1,10 @@
 import * as fs from 'fs';
 
-export function loadEnvFile(envType) {
+export function loadEnvFile(envType = process.env.ENV_TYPE) {
+  if (!envType) {
+    throwMissinEnvTypeError();
+  }
+
   const envFolderPath = './env';
   const envFilePath = `${envFolderPath}/.env.${envType}`;
 
@@ -8,7 +12,7 @@ export function loadEnvFile(envType) {
     throw new Error(`Missing the config file ${envFilePath}`);
   }
 
-  require('dotenv').config({ path: envFilePath });
+  require('dotenv').config({ path: envFilePath, override: true });
 }
 
 export function throwMissinEnvTypeError() {
