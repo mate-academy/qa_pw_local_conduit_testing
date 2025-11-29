@@ -10,11 +10,13 @@ const testParameters = [
 
 testParameters.forEach(({ tagsNumber, testNameEnding }) => {
   test.describe('Create an article with tags', () => {
-    test.beforeEach(async ({ page, user }) => {
+    test.beforeEach(async ({ page, user, internalHomePage }) => {
       await signUpUser(page, user);
+      await internalHomePage.closeSwalIfVisible();
     });
 
     test(`Create an article with ${testNameEnding}`, async ({
+      page,
       internalHomePage,
       createArticlePage,
       viewArticlePage,

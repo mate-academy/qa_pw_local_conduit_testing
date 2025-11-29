@@ -7,6 +7,7 @@ import {
 import { generateNewUserData } from '../../../src/common/testData/generateNewUserData';
 
 const user = generateNewUserData();
+
 const testParameters = [
   {
     email: user.email,

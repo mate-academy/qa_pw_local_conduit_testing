@@ -41,4 +41,18 @@ export class BasePage {
       await expect(this.page).toHaveURL(this.url());
     });
   }
+
+  get swalModal() {
+    return this.page.locator('.swal-modal');
+  }
+
+  get swalOkButton() {
+    return this.page.locator('.swal-button--confirm');
+  }
+
+  async closeSwalIfVisible() {
+    if (await this.swalModal.isVisible()) {
+      await this.swalOkButton.click();
+    }
+  }
 }
