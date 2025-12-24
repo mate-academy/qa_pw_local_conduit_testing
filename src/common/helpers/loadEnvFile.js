@@ -1,18 +1,30 @@
 import * as fs from 'fs';
+import * as path from 'path';
+import dotenv from 'dotenv';
 
 export function loadEnvFile(envType) {
-  const envFolderPath = './env';
-  const envFilePath = `${envFolderPath}/.env.${envType}`;
-
-  if (!fs.existsSync(envFilePath)) {
-    throw new Error(`Missing the config file ${envFilePath}`);
+  if (!envType) {
+    throw new Error(
+      'The ENV_TYPE is undefined. Set ENV_TYPE environment variable.',
+    );
   }
 
-  require('dotenv').config({ path: envFilePath });
-}
+  const envFolderPath = path.resolve('./env');
+  const envFilePath = path.join(envFolderPath, `.env.${envType}`);
 
-export function throwMissinEnvTypeError() {
-  throw new Error(
-    'The ENV_TYPE is undefined. Check the ENV_TYPE env variable is set.',
-  );
+  if (!fs.existsSync(envFilePath)) {
+    console.warn(
+      `Warning: Missing the config file ${envFilePath}. ` +
+        `Using default environment variables.`,
+    );
+    return;
+  }
+
+  const result = dotenv.config({ path: envFilePath });
+
+  if (result.error) {
+    console.error(`Failed to load env file ${envFilePath}:`, result.error);
+  } else {
+    console.log(`Loaded env file: ${envFilePath}`);
+  }
 }
