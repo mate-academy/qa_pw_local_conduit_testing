@@ -1,6 +1,6 @@
 export const ROUTES = {
   home: '/',
-  articleEditor: '/editor',
-  login: `/user/login`,
-  register: `/user/register`,
+  articleEditor: process.env.EDITOR_ROUTE || '/editor',
+  login: process.env.LOGIN_ROUTE || `/user/login`,
+  register: process.env.REGISTER_ROUTE || `/user/register`,
 };

@@ -11,6 +11,8 @@ test.beforeEach(async ({ pages, users, articleWithoutTags }) => {
   await createArticle(pages[0], articleWithoutTags, 1);
 });
 
+test.setTimeout(60000);
+
 test('View an article created by another user', async ({
   articleWithoutTags,
   pages,

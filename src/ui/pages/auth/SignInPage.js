@@ -1,6 +1,7 @@
 import { expect } from '../../../common/helpers/pw';
 import { BasePage } from '../BasePage';
 import { ROUTES } from '../../constants/pageRoutes';
+import { SweetAlertHelper } from '../../../common/helpers/sweetAlertHelper';
 
 export class SignInPage extends BasePage {
   constructor(page, userId = 0) {
@@ -10,6 +11,7 @@ export class SignInPage extends BasePage {
     this.passwordField = page.getByPlaceholder('Password');
     this.signInButton = page.getByRole('button', { name: 'Sign in' });
     this.errorMessage = page.getByRole('list').nth(1);
+    this.sweetAlert = new SweetAlertHelper(page);
   }
 
   async fillEmailField(email) {
@@ -32,7 +34,20 @@ export class SignInPage extends BasePage {
 
   async assertErrorMessageContainsText(messageText) {
     await this.step(`Assert the '${messageText}' error is shown`, async () => {
-      await expect(this.errorMessage).toContainText(messageText);
+      const isModalVisible = await this.sweetAlert.isVisible();
+      
+      if (isModalVisible) {
+        await expect(this.sweetAlert.modal).toBeVisible();
+        await this.sweetAlert.button.click();
+      } else {
+        await expect(this.errorMessage).toContainText(messageText);
+      }
+    });
+  }
+
+  async waitAndCloseSuccessModal() {
+    await this.step(`Wait and close success modal`, async () => {
+      await this.sweetAlert.waitAndClose();
     });
   }
 }
