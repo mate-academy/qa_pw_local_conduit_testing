@@ -27,7 +27,14 @@ export class BasePage {
   async open(directUrl = undefined) {
     await this.step(`Open ${this._pageName()} page`, async () => {
       const url = directUrl ? directUrl : this.url();
-      await this.page.goto(url);
+      
+      if (url.startsWith('#/')) {
+        const baseUrl = process.env.BASE_URL || '';
+        await this.page.goto(`${baseUrl}${url}`, { waitUntil: 'domcontentloaded' });
+        await this.page.waitForLoadState('networkidle', { timeout: 5000 }).catch(() => {});
+      } else {
+        await this.page.goto(url);
+      }
     });
   }
 

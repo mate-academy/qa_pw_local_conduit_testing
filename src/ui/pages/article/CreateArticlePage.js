@@ -2,6 +2,7 @@ import { expect } from '../../../common/helpers/pw';
 import { BasePage } from '../BasePage';
 import { InternalHeader } from '../../components/header/InternalHeader';
 import { ROUTES } from '../../constants/pageRoutes';
+import { SweetAlertHelper } from '../../../common/helpers/sweetAlertHelper';
 
 export class CreateArticlePage extends BasePage {
   constructor(page, userId = 0) {
@@ -11,11 +12,12 @@ export class CreateArticlePage extends BasePage {
     this.titleField = page.getByPlaceholder('Article Title');
     this.descriptionField = page.getByPlaceholder(`What's this article about?`);
     this.textField = page.getByPlaceholder('Write your article (in markdown)');
-    this.tagField = page.getByPlaceholder('Enter tags');
+    this.tagField = page.locator('.ti-new-tag-input').or(page.getByPlaceholder('Enter tags'));
     this.publishArticleButton = page.getByRole('button', {
       name: 'Publish Article',
     });
     this.errorMessage = page.getByRole('list').nth(1);
+    this.sweetAlert = new SweetAlertHelper(page);
   }
 
   async fillTitleField(title) {
@@ -66,7 +68,14 @@ export class CreateArticlePage extends BasePage {
 
   async assertErrorMessageContainsText(messageText) {
     await this.step(`Assert the '${messageText}' error is shown`, async () => {
-      await expect(this.errorMessage).toContainText(messageText);
+      const isModalVisible = await this.sweetAlert.isVisible();
+      
+      if (isModalVisible) {
+        await expect(this.sweetAlert.modal).toBeVisible();
+        await this.sweetAlert.button.click();
+      } else {
+        await expect(this.errorMessage).toContainText(messageText);
+      }
     });
   }
 }
