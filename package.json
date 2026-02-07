@@ -22,6 +22,8 @@
   },
   "scripts": {
     "prepare": "husky",
+    "test-local": "ENV_TYPE=local npx playwright test",
+    "test-local-ui": "ENV_TYPE=local npx playwright test --ui",
     "test-staging": "ENV_TYPE=staging npx playwright test",
     "test-staging-ui": "ENV_TYPE=staging npx playwright test --ui"
   },

@@ -5,12 +5,12 @@ import { signUpUser } from '../../../src/ui/actions/auth/signUpUser';
 let article;
 
 test.beforeEach(async ({ page, user, logger }) => {
-  article = generateNewArticleData(logger);
+  article = generateNewArticleData(logger, 1);
 
   await signUpUser(page, user);
 });
 
-test('Creat an article with required fields', async ({
+test('Create an article with required fields', async ({
   internalHomePage,
   createArticlePage,
   viewArticlePage,
@@ -20,6 +20,7 @@ test('Creat an article with required fields', async ({
   await createArticlePage.fillTitleField(article.title);
   await createArticlePage.fillDescriptionField(article.description);
   await createArticlePage.fillTextField(article.text);
+  await createArticlePage.fillTagsField(article.tags);
   await createArticlePage.clickPublishArticleButton();
 
   await viewArticlePage.assertArticleTitleIsVisible(article.title);
