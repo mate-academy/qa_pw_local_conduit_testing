@@ -11,7 +11,7 @@ export function loadEnvFile(envType) {
   require('dotenv').config({ path: envFilePath });
 }
 
-export function throwMissinEnvTypeError() {
+export function throwMissingEnvTypeError() {
   throw new Error(
     'The ENV_TYPE is undefined. Check the ENV_TYPE env variable is set.',
   );
