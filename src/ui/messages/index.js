@@ -1,5 +1,7 @@
 import local from './local';
-import stagging from './stagging';
+import staging from './staging';
 
-const sets = { local, stagging };
-export default sets[process.env.ENV_TYPE] ?? stagging;
+import { throwMissinEnvTypeError } from '../../../src/common/helpers/loadEnvFile';
+
+const sets = { local, staging };
+export default sets[process.env.ENV_TYPE] || throwMissinEnvTypeError();
