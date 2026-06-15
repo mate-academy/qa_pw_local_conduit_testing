@@ -12,6 +12,10 @@ export async function signUpUser(page, user, userId = 0) {
       await signUpPage.open();
       await signUpPage.submitSignUpForm(user);
 
+      if (process.env.ENV_TYPE === 'local') {
+        await signUpPage.clickOkButton();
+      }
+
       await homePage.yourFeed.assertTabLinkVisible();
     },
     userId,

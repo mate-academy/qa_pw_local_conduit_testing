@@ -1,12 +1,11 @@
 import { expect } from '../../../common/helpers/pw';
 import { BasePage } from '../BasePage';
 import { InternalHeader } from '../../components/header/InternalHeader';
-import { ROUTES } from '../../constants/pageRoutes';
 
 export class CreateArticlePage extends BasePage {
   constructor(page, userId = 0) {
     super(page, userId);
-    this._url = ROUTES.articleEditor;
+    this._url = process.env.ARTICLE_EDITOR_PATH;
     this.header = new InternalHeader(this.page, userId);
     this.titleField = page.getByPlaceholder('Article Title');
     this.descriptionField = page.getByPlaceholder(`What's this article about?`);
@@ -15,7 +14,10 @@ export class CreateArticlePage extends BasePage {
     this.publishArticleButton = page.getByRole('button', {
       name: 'Publish Article',
     });
-    this.errorMessage = page.getByRole('list').nth(1);
+    this.errorMessage =
+      process.env.ENV_TYPE === 'local'
+        ? page.getByRole('dialog').locator('.swal-text')
+        : page.getByRole('list').nth(1);
   }
 
   async fillTitleField(title) {

@@ -1,16 +1,21 @@
 import { expect } from '../../../common/helpers/pw';
 import { BasePage } from '../BasePage';
-import { ROUTES } from '../../constants/pageRoutes';
 
 export class SignUpPage extends BasePage {
   constructor(page, userId = 0) {
     super(page, userId);
-    this._url = ROUTES.register;
+    this._url = process.env.REGISTER_PATH;
     this.usernameField = page.getByPlaceholder('Username');
     this.emailField = page.getByPlaceholder('Email');
     this.passwordField = page.getByPlaceholder('Password');
     this.signUpButton = page.getByRole('button', { name: 'Sign up' });
-    this.errorMessage = page.getByRole('list').nth(1);
+    this.errorMessage =
+      process.env.ENV_TYPE === 'local'
+        ? page.getByRole('dialog').locator('.swal-text')
+        : page.getByRole('list').nth(1);
+    this.okButton = page
+      .getByRole('dialog')
+      .getByRole('button', { name: 'OK' });
   }
 
   async fillUsernameField(username) {
@@ -34,6 +39,12 @@ export class SignUpPage extends BasePage {
   async clickSignUpButton() {
     await this.step(`Click the 'Sign up' button`, async () => {
       await this.signUpButton.click();
+    });
+  }
+
+  async clickOkButton() {
+    await this.step(`Click the 'OK' button`, async () => {
+      await this.okButton.click();
     });
   }
 
