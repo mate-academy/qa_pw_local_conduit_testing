@@ -12,7 +12,11 @@ export class ExternalHeader extends BaseHeader {
 
   async clickSignUpLink() {
     await this.step(`Click 'Sign Up' link`, async () => {
+      console.log('[ExternalHeader.clickSignUpLink] clicking Sign up');
       await this.#signUpLink.click();
+      console.log(
+        `[ExternalHeader.clickSignUpLink] after click url: ${this.page.url()}`,
+      );
     });
   }
 

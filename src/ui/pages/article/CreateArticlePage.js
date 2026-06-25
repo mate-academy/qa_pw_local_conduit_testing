@@ -15,7 +15,8 @@ export class CreateArticlePage extends BasePage {
     this.publishArticleButton = page.getByRole('button', {
       name: 'Publish Article',
     });
-    this.errorMessage = page.getByRole('list').nth(1);
+    this.errorMessage = page.locator('.swal-title');
+    this.errorPopupConfirmButton = page.locator('.swal-button--confirm');
   }
 
   async fillTitleField(title) {
@@ -67,6 +68,9 @@ export class CreateArticlePage extends BasePage {
   async assertErrorMessageContainsText(messageText) {
     await this.step(`Assert the '${messageText}' error is shown`, async () => {
       await expect(this.errorMessage).toContainText(messageText);
+      if (await this.errorPopupConfirmButton.isVisible()) {
+        await this.errorPopupConfirmButton.click();
+      }
     });
   }
 }

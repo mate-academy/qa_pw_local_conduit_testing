@@ -10,7 +10,17 @@ export class SignUpPage extends BasePage {
     this.emailField = page.getByPlaceholder('Email');
     this.passwordField = page.getByPlaceholder('Password');
     this.signUpButton = page.getByRole('button', { name: 'Sign up' });
-    this.errorMessage = page.getByRole('list').nth(1);
+    this.popupMessage = page.locator('.swal-text');
+    this.popupConfirmButton = page.getByRole('button', { name: 'OK' });
+  }
+
+  async open(directUrl = undefined) {
+    await this.step(`Open ${this._pageName()} page`, async () => {
+      const url = directUrl ? directUrl : this.url();
+      await this.page.goto(url);
+      await this.page.waitForLoadState('domcontentloaded');
+      await this.usernameField.waitFor({ state: 'visible' });
+    });
   }
 
   async fillUsernameField(username) {
@@ -48,7 +58,27 @@ export class SignUpPage extends BasePage {
 
   async assertErrorMessageContainsText(messageText) {
     await this.step(`Assert the '${messageText}' error is shown`, async () => {
-      await expect(this.errorMessage).toContainText(messageText);
+      await expect(this.popupMessage).toContainText(messageText);
+    });
+  }
+
+  async assertConfirmationPopupText(messageText) {
+    await this.step(
+      `Assert the confirmation popup contains the '${messageText}' message`,
+      async () => {
+        await expect(this.popupMessage).toContainText(messageText);
+        if (await this.popupConfirmButton.isVisible()) {
+          await this.popupConfirmButton.click();
+        }
+      },
+    );
+  }
+
+  async assertOpened() {
+    await this.step(`Assert ${this._pageName()} page is opened`, async () => {
+      await this.page.waitForURL('**/#/register');
+      await expect(this.page).toHaveURL(/#\/register$/);
+      await this.usernameField.waitFor({ state: 'visible' });
     });
   }
 }
