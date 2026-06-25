@@ -9,7 +9,17 @@ export class SignInPage extends BasePage {
     this.emailField = page.getByPlaceholder('Email');
     this.passwordField = page.getByPlaceholder('Password');
     this.signInButton = page.getByRole('button', { name: 'Sign in' });
-    this.errorMessage = page.getByRole('list').nth(1);
+    this.errorMessage = page.locator('.swal-text');
+    this.popupConfirmButton = page.getByRole('button', { name: 'OK' });
+  }
+
+  async open(directUrl = undefined) {
+    await this.step(`Open ${this._pageName()} page`, async () => {
+      const url = directUrl ? directUrl : this.url();
+      await this.page.goto(url);
+      await this.page.waitForLoadState('domcontentloaded');
+      await this.emailField.waitFor({ state: 'visible' });
+    });
   }
 
   async fillEmailField(email) {
@@ -33,6 +43,10 @@ export class SignInPage extends BasePage {
   async assertErrorMessageContainsText(messageText) {
     await this.step(`Assert the '${messageText}' error is shown`, async () => {
       await expect(this.errorMessage).toContainText(messageText);
+      if (await this.popupConfirmButton.isVisible()) {
+        await this.popupConfirmButton.click();
+        await expect(this.errorMessage).toBeHidden();
+      }
     });
   }
 }
