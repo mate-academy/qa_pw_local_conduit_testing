@@ -76,8 +76,8 @@ export class SignUpPage extends BasePage {
 
   async assertOpened() {
     await this.step(`Assert ${this._pageName()} page is opened`, async () => {
-      await this.page.waitForURL('**/#/register');
-      await expect(this.page).toHaveURL(/#\/register$/);
+      await this.page.waitForURL(this.url());
+      await expect(this.page).toHaveURL(this.url());
       await this.usernameField.waitFor({ state: 'visible' });
     });
   }
