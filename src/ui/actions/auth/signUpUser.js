@@ -13,6 +13,7 @@ export async function signUpUser(page, user, userId = 0) {
       await signUpPage.submitSignUpForm(user);
 
       await homePage.yourFeed.assertTabLinkVisible();
+      await homePage.clickOkButton();
     },
     userId,
   );
