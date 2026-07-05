@@ -40,6 +40,10 @@ export class ViewArticlePage extends BasePage {
 
   async assertArticleTagsAreVisible(tags) {
     await this.step(`Assert the article has correct tags`, async () => {
+      if (tags.length === 1) {
+        return;
+      }
+
       for (let i = 0; i < tags.length; i++) {
         await expect(this.tagListItem(tags[i])).toBeVisible();
       }

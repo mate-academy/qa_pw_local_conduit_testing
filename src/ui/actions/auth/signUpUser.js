@@ -13,6 +13,12 @@ export async function signUpUser(page, user, userId = 0) {
       await signUpPage.submitSignUpForm(user);
 
       await homePage.yourFeed.assertTabLinkVisible();
+
+      // Local app shows SweetAlert after successful registration and it can block clicks.
+      const okButton = page.getByRole('button', { name: 'OK' });
+      if (await okButton.isVisible({ timeout: 1000 }).catch(() => false)) {
+        await okButton.click();
+      }
     },
     userId,
   );

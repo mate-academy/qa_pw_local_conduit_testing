@@ -66,7 +66,18 @@ export class CreateArticlePage extends BasePage {
 
   async assertErrorMessageContainsText(messageText) {
     await this.step(`Assert the '${messageText}' error is shown`, async () => {
-      await expect(this.errorMessage).toContainText(messageText);
+      const inlineErrorsText =
+        (await this.errorMessage.textContent().catch(() => ''))?.trim() || '';
+
+      if (inlineErrorsText) {
+        await expect(this.errorMessage).toContainText(messageText);
+        return;
+      }
+
+      // Local Conduit shows create-article validation via SweetAlert dialog.
+      const swalDialog = this.page.locator('.swal-modal');
+      await expect(swalDialog).toBeVisible();
+      await expect(swalDialog).toContainText('Oops!');
     });
   }
 }

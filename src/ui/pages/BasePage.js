@@ -37,8 +37,10 @@ export class BasePage {
 
   async assertOpened() {
     await this.step(`Assert ${this._pageName()} page is opened`, async () => {
-      await this.page.waitForURL(this.url());
-      await expect(this.page).toHaveURL(this.url());
+      const currentUrl = new URL(this.page.url());
+      const currentPath = `${currentUrl.pathname}${currentUrl.hash}`;
+
+      await expect(currentPath).toBe(this.url());
     });
   }
 }

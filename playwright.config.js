@@ -1,12 +1,18 @@
 import { defineConfig, devices } from '@playwright/test';
+import { dotenvx } from '@dotenvx/dotenvx';
 import {
   loadEnvFile,
   throwMissinEnvTypeError,
 } from './src/common/helpers/loadEnvFile';
 
-const envType = process.env.ENV_TYPE || throwMissinEnvTypeError();
+const envFiles = {
+  local: './env/.env.local',
+  staging: './env/.env.staging'
+};
 
+const envType = process.env.ENV_TYPE || 'local';
 loadEnvFile(envType);
+
 
 /**
  * See https://playwright.dev/docs/test-configuration.
