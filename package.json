@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "dependencies": {
+    "@dotenvx/dotenvx": "^2.1.4",
     "@faker-js/faker": "^9",
     "dotenv": "^16.5.0",
     "playwright-core": "^1"
@@ -23,7 +24,9 @@
   "scripts": {
     "prepare": "husky",
     "test-staging": "ENV_TYPE=staging npx playwright test",
-    "test-staging-ui": "ENV_TYPE=staging npx playwright test --ui"
+    "test-staging-ui": "ENV_TYPE=staging npx playwright test --ui",
+    "test:local": "ENV_TYPE=local npx playwright test",
+    "test:local:ui": "ENV_TYPE=local npx playwright test --ui"
   },
   "husky": {
     "hooks": {
