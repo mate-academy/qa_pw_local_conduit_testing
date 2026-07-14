@@ -8,5 +8,12 @@ export class InternalHomePage extends BaseHomePage {
 
     this.header = new InternalHeader(this.page, userId);
     this.yourFeed = new YourFeedTab(this.page, userId);
+    this.successOkButton = page.getByRole('button', { name: 'OK' });
+  }
+
+  async clickOkButton() {
+    await this.step(`Clisck OK button after registration`, async () => {
+      await this.successOkButton.click();
+    });
   }
 }
