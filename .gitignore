@@ -6,3 +6,5 @@ node_modules/
 ./vscode
 /allure-results/
 /allure-report/
+/.docker/data/
+bash.exe.stackdump
