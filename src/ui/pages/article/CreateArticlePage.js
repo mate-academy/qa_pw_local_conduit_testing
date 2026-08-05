@@ -1,4 +1,4 @@
-import { expect } from '../../../common/helpers/pw';
+import { expect } from 'playwright/test';
 import { BasePage } from '../BasePage';
 import { InternalHeader } from '../../components/header/InternalHeader';
 import { ROUTES } from '../../constants/pageRoutes';
@@ -16,6 +16,7 @@ export class CreateArticlePage extends BasePage {
       name: 'Publish Article',
     });
     this.errorMessage = page.getByRole('list').nth(1);
+    this.oopsModal = page.getByText('Oops!');
   }
 
   async fillTitleField(title) {
@@ -67,6 +68,12 @@ export class CreateArticlePage extends BasePage {
   async assertErrorMessageContainsText(messageText) {
     await this.step(`Assert the '${messageText}' error is shown`, async () => {
       await expect(this.errorMessage).toContainText(messageText);
+    });
+  }
+
+  async assertOopsModalIsVisible() {
+    await this.step(`Assert the 'Oops!' modal is visible`, async () => {
+      await expect(this.oopsModal).toBeVisible();
     });
   }
 }

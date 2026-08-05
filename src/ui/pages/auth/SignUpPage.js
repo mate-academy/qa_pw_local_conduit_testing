@@ -1,4 +1,4 @@
-import { expect } from '../../../common/helpers/pw';
+import { expect } from 'playwright/test';
 import { BasePage } from '../BasePage';
 import { ROUTES } from '../../constants/pageRoutes';
 
@@ -10,7 +10,8 @@ export class SignUpPage extends BasePage {
     this.emailField = page.getByPlaceholder('Email');
     this.passwordField = page.getByPlaceholder('Password');
     this.signUpButton = page.getByRole('button', { name: 'Sign up' });
-    this.errorMessage = page.getByRole('list').nth(1);
+    this.errorMessage = page.locator('.swal-modal');
+    this.okButton = page.getByRole('button', { name: 'OK' });
   }
 
   async fillUsernameField(username) {
@@ -37,12 +38,19 @@ export class SignUpPage extends BasePage {
     });
   }
 
+  async clickOkButton() {
+    await this.step(`Click the 'OK' button`, async () => {
+      await this.okButton.click();
+    });
+  }
+
   async submitSignUpForm(user) {
     await this.step(`Fill the 'Sign up' form`, async () => {
       await this.fillUsernameField(user.username);
       await this.fillEmailField(user.email);
       await this.fillPasswordField(user.password);
       await this.clickSignUpButton();
+      await this.clickOkButton();
     });
   }
 
