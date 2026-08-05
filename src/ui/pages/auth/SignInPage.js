@@ -1,4 +1,4 @@
-import { expect } from '../../../common/helpers/pw';
+import { expect } from 'playwright/test';
 import { BasePage } from '../BasePage';
 import { ROUTES } from '../../constants/pageRoutes';
 
@@ -9,7 +9,7 @@ export class SignInPage extends BasePage {
     this.emailField = page.getByPlaceholder('Email');
     this.passwordField = page.getByPlaceholder('Password');
     this.signInButton = page.getByRole('button', { name: 'Sign in' });
-    this.errorMessage = page.getByRole('list').nth(1);
+    this.errorMessage = page.locator('.swal-modal');
   }
 
   async fillEmailField(email) {
