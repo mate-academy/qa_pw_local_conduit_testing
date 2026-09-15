@@ -5,8 +5,16 @@ import {
   INVALID_EMAIL_OR_PASSWORD_MESSAGE,
 } from '../../../src/ui/constants/authErrorMessages';
 import { generateNewUserData } from '../../../src/common/testData/generateNewUserData';
+import { signUpUser } from '../../../src/ui/actions/auth/signUpUser';
 
 const user = generateNewUserData();
+
+test.beforeAll(async ({ browser }) => {
+  const page = await browser.newPage();
+  await signUpUser(page, user);
+  await page.close();
+});
+
 const testParameters = [
   {
     email: user.email,

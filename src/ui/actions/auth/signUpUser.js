@@ -11,6 +11,7 @@ export async function signUpUser(page, user, userId = 0) {
 
       await signUpPage.open();
       await signUpPage.submitSignUpForm(user);
+      await signUpPage.closeWelcomeDialog();
 
       await homePage.yourFeed.assertTabLinkVisible();
     },

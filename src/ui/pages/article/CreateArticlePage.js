@@ -15,7 +15,7 @@ export class CreateArticlePage extends BasePage {
     this.publishArticleButton = page.getByRole('button', {
       name: 'Publish Article',
     });
-    this.errorMessage = page.getByRole('list').nth(1);
+    this.errorMessage = page.getByRole('dialog');
   }
 
   async fillTitleField(title) {
@@ -41,6 +41,9 @@ export class CreateArticlePage extends BasePage {
       for (let i = 0; i < tags.length; i++) {
         await this.tagField.fill(tags[i]);
         await this.page.keyboard.press('Enter');
+        await expect(
+          this.page.getByRole('listitem').filter({ hasText: tags[i] }),
+        ).toBeVisible();
       }
     });
   }
