@@ -10,7 +10,10 @@ export class SignUpPage extends BasePage {
     this.emailField = page.getByPlaceholder('Email');
     this.passwordField = page.getByPlaceholder('Password');
     this.signUpButton = page.getByRole('button', { name: 'Sign up' });
-    this.errorMessage = page.getByRole('list').nth(1);
+    this.errorMessage = page.getByRole('dialog');
+    this.welcomeDialogOkButton = page
+      .getByRole('dialog')
+      .getByRole('button', { name: 'OK' });
   }
 
   async fillUsernameField(username) {
@@ -34,6 +37,12 @@ export class SignUpPage extends BasePage {
   async clickSignUpButton() {
     await this.step(`Click the 'Sign up' button`, async () => {
       await this.signUpButton.click();
+    });
+  }
+
+  async closeWelcomeDialog() {
+    await this.step(`Close the 'Welcome' dialog`, async () => {
+      await this.welcomeDialogOkButton.click();
     });
   }
 
