@@ -1,4 +1,5 @@
 import { BaseHeader } from './BaseHeader';
+import { ROUTES } from '../../constants/pageRoutes';
 
 export class InternalHeader extends BaseHeader {
   #newArticleLink;
@@ -17,6 +18,9 @@ export class InternalHeader extends BaseHeader {
   async clickNewArticleLink() {
     await this.step(`Click 'New Article' link`, async () => {
       await this.#newArticleLink.click();
+      await this.page.waitForURL(url =>
+        url.href.includes(ROUTES.articleEditor),
+      );
     });
   }
 
