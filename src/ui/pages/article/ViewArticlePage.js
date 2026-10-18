@@ -14,7 +14,11 @@ export class ViewArticlePage extends BasePage {
   }
 
   tagListItem(tagName) {
-    return this.page.getByRole('listitem').filter({ hasText: tagName });
+    // Exact match, so a short tag like 'a' does not match other list items.
+    const escapedTag = tagName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    return this.page
+      .getByRole('listitem')
+      .filter({ hasText: new RegExp(`^\\s*${escapedTag}\\s*$`) });
   }
 
   async assertArticleTitleIsVisible(title) {

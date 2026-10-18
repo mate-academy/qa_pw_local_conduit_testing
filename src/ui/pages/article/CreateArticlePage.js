@@ -1,4 +1,5 @@
 import { expect } from '../../../common/helpers/pw';
+import { errorMessageLocator } from '../../../common/helpers/errorDisplay';
 import { BasePage } from '../BasePage';
 import { InternalHeader } from '../../components/header/InternalHeader';
 import { ROUTES } from '../../constants/pageRoutes';
@@ -15,7 +16,7 @@ export class CreateArticlePage extends BasePage {
     this.publishArticleButton = page.getByRole('button', {
       name: 'Publish Article',
     });
-    this.errorMessage = page.getByRole('list').nth(1);
+    this.errorMessage = errorMessageLocator(page);
   }
 
   async fillTitleField(title) {

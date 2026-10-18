@@ -9,6 +9,14 @@ export async function signUpUser(page, user, userId = 0) {
       const signUpPage = new SignUpPage(page, userId);
       const homePage = new InternalHomePage(page, userId);
 
+      await page.addLocatorHandler(
+        homePage.welcomeDialog,
+        async () => {
+          await homePage.confirmWelcomeDialog();
+        },
+        { times: 1 },
+      );
+
       await signUpPage.open();
       await signUpPage.submitSignUpForm(user);
 

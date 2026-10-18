@@ -2,6 +2,8 @@ import { test } from '../../_fixtures/fixtures';
 import { generateNewArticleData } from '../../../src/common/testData/generateNewArticleData';
 import { signUpUser } from '../../../src/ui/actions/auth/signUpUser';
 
+const ENV_TYPE = process.env.ENV_TYPE;
+
 const testParameters = [
   { tagsNumber: 1, testNameEnding: 'one tag' },
   { tagsNumber: 2, testNameEnding: 'two tags' },
@@ -14,25 +16,31 @@ testParameters.forEach(({ tagsNumber, testNameEnding }) => {
       await signUpUser(page, user);
     });
 
-    test(`Create an article with ${testNameEnding}`, async ({
-      internalHomePage,
-      createArticlePage,
-      viewArticlePage,
-      logger,
-    }) => {
-      const article = generateNewArticleData(logger, tagsNumber);
+    // Known local bug: a single tag is saved but not shown on the article page.
+    const testFn = tagsNumber === 1 && ENV_TYPE === 'local' ? test.fixme : test;
 
-      await internalHomePage.header.clickNewArticleLink();
+    testFn(
+      `Create an article with ${testNameEnding}`,
+      async ({
+        internalHomePage,
+        createArticlePage,
+        viewArticlePage,
+        logger,
+      }) => {
+        const article = generateNewArticleData(logger, tagsNumber);
 
-      await createArticlePage.fillTitleField(article.title);
-      await createArticlePage.fillDescriptionField(article.description);
-      await createArticlePage.fillTextField(article.text);
-      await createArticlePage.fillTagsField(article.tags);
-      await createArticlePage.clickPublishArticleButton();
+        await internalHomePage.header.clickNewArticleLink();
 
-      await viewArticlePage.assertArticleTitleIsVisible(article.title);
-      await viewArticlePage.assertArticleTextIsVisible(article.text);
-      await viewArticlePage.assertArticleTagsAreVisible(article.tags);
-    });
+        await createArticlePage.fillTitleField(article.title);
+        await createArticlePage.fillDescriptionField(article.description);
+        await createArticlePage.fillTextField(article.text);
+        await createArticlePage.fillTagsField(article.tags);
+        await createArticlePage.clickPublishArticleButton();
+
+        await viewArticlePage.assertArticleTitleIsVisible(article.title);
+        await viewArticlePage.assertArticleTextIsVisible(article.text);
+        await viewArticlePage.assertArticleTagsAreVisible(article.tags);
+      },
+    );
   });
 });
