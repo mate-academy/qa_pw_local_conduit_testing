@@ -13,5 +13,5 @@ test('Creat an article without required fields', async ({
   await internalHomePage.header.clickNewArticleLink();
 
   await createArticlePage.clickPublishArticleButton();
-  await createArticlePage.assertErrorMessageContainsText(TITLE_CANNOT_BE_EMPTY);
+  await createArticlePage.assertRequiredFieldError(TITLE_CANNOT_BE_EMPTY);
 });

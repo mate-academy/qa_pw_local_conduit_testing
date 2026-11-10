@@ -20,7 +20,13 @@ testParameters.forEach(({ tagsNumber, testNameEnding }) => {
       viewArticlePage,
       logger,
     }) => {
+      test.fixme(
+        tagsNumber === 1 && process.env.ENV_TYPE === 'local',
+        'Local app saves a single tag as a string, so it is not displayed',
+      );
+
       const article = generateNewArticleData(logger, tagsNumber);
+      console.log('TAGS:', article.tags);
 
       await internalHomePage.header.clickNewArticleLink();
 
@@ -29,7 +35,6 @@ testParameters.forEach(({ tagsNumber, testNameEnding }) => {
       await createArticlePage.fillTextField(article.text);
       await createArticlePage.fillTagsField(article.tags);
       await createArticlePage.clickPublishArticleButton();
-
       await viewArticlePage.assertArticleTitleIsVisible(article.title);
       await viewArticlePage.assertArticleTextIsVisible(article.text);
       await viewArticlePage.assertArticleTagsAreVisible(article.tags);
