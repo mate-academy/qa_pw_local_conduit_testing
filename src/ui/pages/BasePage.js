@@ -1,5 +1,5 @@
 import { testStep, expect } from '../../common/helpers/pw';
-
+import { ROUTES } from '../constants/pageRoutes';
 export class BasePage {
   _url;
 
@@ -27,6 +27,12 @@ export class BasePage {
   async open(directUrl = undefined) {
     await this.step(`Open ${this._pageName()} page`, async () => {
       const url = directUrl ? directUrl : this.url();
+      console.log(
+        'REGISTER_ROUTE =',
+        process.env.REGISTER_ROUTE,
+        '| ROUTES.register =',
+        ROUTES.register,
+      );
       await this.page.goto(url);
     });
   }

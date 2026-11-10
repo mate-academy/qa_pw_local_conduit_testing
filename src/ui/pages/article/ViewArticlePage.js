@@ -38,10 +38,21 @@ export class ViewArticlePage extends BasePage {
     });
   }
 
+  // async assertArticleTagsAreVisible(tags) {
+  //   await this.step(`Assert the article has correct tags`, async () => {
+  //     for (let i = 0; i < tags.length; i++) {
+  //       await expect(this.tagListItem(tags[i])).toBeVisible();
+  //     }
+  //   });
+  // }
   async assertArticleTagsAreVisible(tags) {
-    await this.step(`Assert the article has correct tags`, async () => {
-      for (let i = 0; i < tags.length; i++) {
-        await expect(this.tagListItem(tags[i])).toBeVisible();
+    await this.step('Assert the article tags are visible', async () => {
+      for (const tag of tags) {
+        await expect(
+          this.page
+            .getByRole('listitem')
+            .filter({ hasText: new RegExp(`^${tag}$`) }),
+        ).toBeVisible();
       }
     });
   }

@@ -30,6 +30,18 @@ export class SignInPage extends BasePage {
     });
   }
 
+  async assertSignInError(expectedText) {
+    await this.step('Assert the Sign in error is shown', async () => {
+      if (process.env.ERROR_DISPLAY === 'modal') {
+        const modal = this.page.locator('.swal-modal');
+        await expect(modal).toBeVisible();
+        await expect(modal.locator('.swal-title')).toHaveText('Login failed!');
+      } else {
+        await this.assertErrorMessageContainsText(expectedText);
+      }
+    });
+  }
+
   async assertErrorMessageContainsText(messageText) {
     await this.step(`Assert the '${messageText}' error is shown`, async () => {
       await expect(this.errorMessage).toContainText(messageText);

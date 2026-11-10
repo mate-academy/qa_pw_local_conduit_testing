@@ -64,9 +64,31 @@ export class CreateArticlePage extends BasePage {
     });
   }
 
+  async assertRequiredFieldError(expectedText) {
+    if (process.env.ERROR_DISPLAY === 'modal') {
+      await this.assertErrorModalIsShown();
+    } else {
+      await this.assertErrorMessageContainsText(expectedText);
+    }
+  }
+
   async assertErrorMessageContainsText(messageText) {
     await this.step(`Assert the '${messageText}' error is shown`, async () => {
       await expect(this.errorMessage).toContainText(messageText);
+    });
+  }
+
+  async assertErrorModalIsShown() {
+    await this.step("Assert the 'Oops!' error modal is shown", async () => {
+      const modal = this.page.locator('.swal-modal');
+      await expect(modal).toBeVisible();
+      await expect(modal.locator('.swal-title')).toHaveText('Oops!');
+    });
+  }
+
+  async closeErrorModal() {
+    await this.step('Close the error modal', async () => {
+      await this.page.locator('.swal-button--confirm').click();
     });
   }
 }

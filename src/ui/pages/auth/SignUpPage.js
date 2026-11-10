@@ -45,6 +45,28 @@ export class SignUpPage extends BasePage {
       await this.clickSignUpButton();
     });
   }
+  async closeWelcomeModal() {
+    if (process.env.WELCOME_MODAL !== 'true') {
+      return;
+    }
+    await this.step("Close the 'Welcome' modal", async () => {
+      await this.page.locator('.swal-button--confirm').click();
+    });
+  }
+
+  async assertRegistrationError(expectedText) {
+    await this.step('Assert the registration error is shown', async () => {
+      if (process.env.ERROR_DISPLAY === 'modal') {
+        const modal = this.page.locator('.swal-modal');
+        await expect(modal).toBeVisible();
+        await expect(modal.locator('.swal-title')).toHaveText(
+          'Registration failed!',
+        );
+      } else {
+        await this.assertErrorMessageContainsText(expectedText);
+      }
+    });
+  }
 
   async assertErrorMessageContainsText(messageText) {
     await this.step(`Assert the '${messageText}' error is shown`, async () => {
