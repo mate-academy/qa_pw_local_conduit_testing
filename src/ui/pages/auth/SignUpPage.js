@@ -10,7 +10,18 @@ export class SignUpPage extends BasePage {
     this.emailField = page.getByPlaceholder('Email');
     this.passwordField = page.getByPlaceholder('Password');
     this.signUpButton = page.getByRole('button', { name: 'Sign up' });
+    this.okButton = page.getByRole('button', { name: 'OK' });
     this.errorMessage = page.getByRole('list').nth(1);
+  }
+
+  async open() {
+    await this.step(`Open Sign up page via navigation`, async () => {
+      await this.page.goto('/');
+
+      await this.page.getByRole('link', { name: 'Sign up' }).click();
+
+      await this.usernameField.waitFor({ state: 'visible' });
+    });
   }
 
   async fillUsernameField(username) {
@@ -37,12 +48,26 @@ export class SignUpPage extends BasePage {
     });
   }
 
+  async clickOkButton() {
+    await this.step(`Click 'OK' button on success modal`, async () => {
+      if (process.env.ENV_TYPE === 'local') {
+        await this.okButton
+          .waitFor({ state: 'visible', timeout: 5000 })
+          .catch(() => {});
+        if (await this.okButton.isVisible()) {
+          await this.okButton.click();
+        }
+      }
+    });
+  }
+
   async submitSignUpForm(user) {
     await this.step(`Fill the 'Sign up' form`, async () => {
       await this.fillUsernameField(user.username);
       await this.fillEmailField(user.email);
       await this.fillPasswordField(user.password);
       await this.clickSignUpButton();
+      await this.clickOkButton();
     });
   }
 
