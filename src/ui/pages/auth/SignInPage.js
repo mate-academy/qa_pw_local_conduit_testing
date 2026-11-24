@@ -1,15 +1,20 @@
 import { expect } from '../../../common/helpers/pw';
 import { BasePage } from '../BasePage';
 import { ROUTES } from '../../constants/pageRoutes';
+import { SweetAlert } from '../../components/SweetAlert';
 
 export class SignInPage extends BasePage {
   constructor(page, userId = 0) {
     super(page, userId);
+
     this._url = ROUTES.login;
     this.emailField = page.getByPlaceholder('Email');
     this.passwordField = page.getByPlaceholder('Password');
-    this.signInButton = page.getByRole('button', { name: 'Sign in' });
+    this.signInButton = page.getByRole('button', {
+      name: 'Sign in',
+    });
     this.errorMessage = page.getByRole('list').nth(1);
+    this.sweetAlert = new SweetAlert(page, userId);
   }
 
   async fillEmailField(email) {
@@ -32,7 +37,14 @@ export class SignInPage extends BasePage {
 
   async assertErrorMessageContainsText(messageText) {
     await this.step(`Assert the '${messageText}' error is shown`, async () => {
-      await expect(this.errorMessage).toContainText(messageText);
+      if (process.env.ENV_TYPE === 'local') {
+        await this.sweetAlert.assertVisible();
+        await this.sweetAlert.assertTitle('Login failed!');
+        await this.sweetAlert.assertMessage(messageText);
+        await this.sweetAlert.clickOkButton();
+      } else {
+        await expect(this.errorMessage).toContainText(messageText);
+      }
     });
   }
 }

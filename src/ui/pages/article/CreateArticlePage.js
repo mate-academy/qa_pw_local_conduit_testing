@@ -2,10 +2,12 @@ import { expect } from '../../../common/helpers/pw';
 import { BasePage } from '../BasePage';
 import { InternalHeader } from '../../components/header/InternalHeader';
 import { ROUTES } from '../../constants/pageRoutes';
+import { SweetAlert } from '../../components/SweetAlert';
 
 export class CreateArticlePage extends BasePage {
   constructor(page, userId = 0) {
     super(page, userId);
+
     this._url = ROUTES.articleEditor;
     this.header = new InternalHeader(this.page, userId);
     this.titleField = page.getByPlaceholder('Article Title');
@@ -16,6 +18,7 @@ export class CreateArticlePage extends BasePage {
       name: 'Publish Article',
     });
     this.errorMessage = page.getByRole('list').nth(1);
+    this.sweetAlert = new SweetAlert(page, userId);
   }
 
   async fillTitleField(title) {
@@ -38,9 +41,9 @@ export class CreateArticlePage extends BasePage {
 
   async fillTagsField(tags) {
     await this.step(`Fill the 'Tags' field`, async () => {
-      for (let i = 0; i < tags.length; i++) {
-        await this.tagField.fill(tags[i]);
-        await this.page.keyboard.press('Enter');
+      for (const tag of tags) {
+        await this.tagField.fill(tag);
+        await this.tagField.press('Enter');
       }
     });
   }
@@ -60,13 +63,21 @@ export class CreateArticlePage extends BasePage {
       if (article.tags.length > 0) {
         await this.fillTagsField(article.tags);
       }
+
       await this.clickPublishArticleButton();
     });
   }
 
   async assertErrorMessageContainsText(messageText) {
     await this.step(`Assert the '${messageText}' error is shown`, async () => {
-      await expect(this.errorMessage).toContainText(messageText);
+      if (process.env.ENV_TYPE === 'local') {
+        await this.sweetAlert.assertVisible();
+        await this.sweetAlert.assertTitle('Oops!');
+        await this.sweetAlert.assertMessage(messageText);
+        await this.sweetAlert.clickOkButton();
+      } else {
+        await expect(this.errorMessage).toContainText(messageText);
+      }
     });
   }
 }

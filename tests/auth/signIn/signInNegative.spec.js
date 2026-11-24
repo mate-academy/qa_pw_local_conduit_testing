@@ -1,39 +1,45 @@
 import { test } from '../../_fixtures/fixtures';
+import { SignInPage } from '../../../src/ui/pages/auth/SignInPage';
+import { signUpUser } from '../../../src/ui/actions/auth/signUpUser';
 import {
   EMPTY_EMAIL_MESSAGE,
   EMPTY_PASSWORD_MESSAGE,
   INVALID_EMAIL_OR_PASSWORD_MESSAGE,
 } from '../../../src/ui/constants/authErrorMessages';
-import { generateNewUserData } from '../../../src/common/testData/generateNewUserData';
 
-const user = generateNewUserData();
+test.use({ contextsNumber: 2 });
+
 const testParameters = [
   {
-    email: user.email,
-    password: '',
+    getEmail: user => user.email,
+    getPassword: () => '',
     message: EMPTY_PASSWORD_MESSAGE,
     title: 'empty password',
   },
   {
-    email: '',
-    password: user.password,
+    getEmail: () => '',
+    getPassword: user => user.password,
     message: EMPTY_EMAIL_MESSAGE,
     title: 'empty email',
   },
   {
-    email: user.email,
-    password: '1',
+    getEmail: user => user.email,
+    getPassword: () => '1',
     message: INVALID_EMAIL_OR_PASSWORD_MESSAGE,
     title: 'wrong password',
   },
 ];
 
-testParameters.forEach(({ email, password, message, title }) => {
-  test.describe('Sign in negative tests', () => {
-    test(`Sign in with ${title}`, async ({ signInPage }) => {
+test.describe('Sign in negative tests', () => {
+  testParameters.forEach(({ getEmail, getPassword, message, title }) => {
+    test(`Sign in with ${title}`, async ({ pages, user }) => {
+      await signUpUser(pages[0], user);
+
+      const signInPage = new SignInPage(pages[1]);
+
       await signInPage.open();
-      await signInPage.fillEmailField(email);
-      await signInPage.fillPasswordField(password);
+      await signInPage.fillEmailField(getEmail(user));
+      await signInPage.fillPasswordField(getPassword(user));
       await signInPage.clickSignInButton();
       await signInPage.assertErrorMessageContainsText(message);
     });

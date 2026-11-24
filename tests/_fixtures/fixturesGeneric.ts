@@ -28,6 +28,7 @@ export const test = base.extend<
 
       pages[i] = await context.newPage();
     }
+
     await use(pages);
   },
   user: async ({ logger }, use) => {
@@ -54,8 +55,10 @@ export const test = base.extend<
   ],
   infoTestLog: [
     async ({ logger }, use, testInfo) => {
-      const indexOfTestSubfolderStart = testInfo.file.indexOf('/tests') + 7;
-      const fileName = testInfo.file.substring(indexOfTestSubfolderStart);
+      const normalizedFileName = testInfo.file.replace(/\\/g, '/');
+      const indexOfTestSubfolderStart =
+        normalizedFileName.indexOf('/tests/') + 7;
+      const fileName = normalizedFileName.substring(indexOfTestSubfolderStart);
 
       logger.info(`Test started: ${fileName}`);
 
@@ -74,13 +77,19 @@ export const test = base.extend<
         logger,
       );
 
-      await allure.parentSuite(parentSuite);
-      await allure.suite(suite);
+      if (parentSuite) {
+        await allure.parentSuite(parentSuite);
+      }
+
+      if (suite) {
+        await allure.suite(suite);
+      }
+
       if (subSuite) {
         await allure.subSuite(subSuite);
       }
 
-      await use('addAllureTestHierarhy');
+      await use('addAllureTestHierarchy');
     },
     { scope: 'test', auto: true },
   ],
